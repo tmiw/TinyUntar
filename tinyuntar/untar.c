@@ -1,7 +1,4 @@
-#include "esp_log.h"
 #include "untar.h"
-
-#define CURRENT_LOG_TAG ("TinyUntar")
 
 char *empty_string = "";
 
@@ -14,12 +11,12 @@ int parse_header(const unsigned char buffer[512], header_t *header)
 
 static void log_error(const char *message)
 {
-    ESP_LOGE(CURRENT_LOG_TAG, "%s", message);
+    printf("ERROR: %s\n", message);
 }
 
 static void log_debug(const char *message)
 {
-    ESP_LOGD(CURRENT_LOG_TAG, "%s", message);
+    printf("DEBUG: %s\n", message);
 }
 
 unsigned long long decode_base256(const unsigned char *buffer)
