@@ -304,7 +304,7 @@ int read_tar(entry_callbacks_t *callbacks, void *context_data)
             num_blocks = GET_NUM_BLOCKS(header_translated.filesize);
             while(i < num_blocks)
             {
-                if(read_block(callback, context_data, buffer) != 0)
+                if(read_block(callbacks, context_data, buffer) != 0)
                 {
                     log_error("Could not read block. File too short.");
                     return -6;
@@ -336,8 +336,6 @@ int read_tar(entry_callbacks_t *callbacks, void *context_data)
 
         entry_index++;
     }
-
-    fclose(fp);
 
     return 0;
 }
