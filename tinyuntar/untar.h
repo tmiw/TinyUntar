@@ -96,8 +96,11 @@ typedef int (*entry_end_callback_t)(header_translated_t *header,
 									int entry_index, 
 									void *context_data);
 
+typedef int (*data_read_callback_t(void *context_data, unsigned char* block, int length);
+
 struct entry_callbacks_s
 {
+	data_read_callback_t read_data_cb;
 	entry_header_callback_t header_cb;
 	entry_data_callback_t data_cb;
 	entry_end_callback_t end_cb;
@@ -105,7 +108,7 @@ struct entry_callbacks_s
 
 typedef struct entry_callbacks_s entry_callbacks_t;
 
-int read_tar(const char *file_path, entry_callbacks_t *callbacks, void *context_data);
+int read_tar(entry_callbacks_t *callbacks, void *context_data);
 void dump_header(header_translated_t *header);
 unsigned long long decode_base256(unsigned const char *buffer);
 char *trim(char *raw, int length);

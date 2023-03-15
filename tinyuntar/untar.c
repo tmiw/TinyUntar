@@ -233,12 +233,12 @@ int translate_header(header_t *raw_header, header_translated_t *parsed)
     return 0;
 }
 
-static int read_block(FILE *fp, unsigned char *buffer)
+static int read_block(entry_callbacks_t* callbacks, void* context_data, unsigned char *buffer)
 {
     char message[200];
     int num_read;
         
-    num_read = fread(buffer, 1, TAR_BLOCK_SIZE, fp);
+    num_read = callbacks->read_data_cb(context_data, buffer, TAR_BLOCK_SIZE);
     if(num_read < TAR_BLOCK_SIZE)
     {
         snprintf(message, 200, "Read has stopped short at (%d) count "
@@ -252,13 +252,11 @@ static int read_block(FILE *fp, unsigned char *buffer)
     return 0;
 }
 
-int read_tar(const char *file_path, entry_callbacks_t *callbacks, void *context_data)
+int read_tar(entry_callbacks_t *callbacks, void *context_data)
 {
     unsigned char buffer[TAR_BLOCK_SIZE + 1];
     int header_checked = 0;
     int i;
-
-    FILE *fp;
 
     header_t header;
     header_translated_t header_translated;
@@ -270,17 +268,11 @@ int read_tar(const char *file_path, entry_callbacks_t *callbacks, void *context_
 
     buffer[TAR_BLOCK_SIZE] = 0;
 
-    if((fp = fopen(file_path, "rb")) == NULL)
-    {
-        log_error("Could not open archive.");
-        return -1;
-    }
-
     // The end of the file is represented by two empty entries (which we 
     // expediently identify by filename length).
     while(empty_count < 2)
     {
-        if(read_block(fp, buffer) != 0)
+        if(read_block(callbacks, context_data, buffer) != 0)
             break;
 
         // If we haven't yet determined what format to support, read the 
@@ -315,7 +307,7 @@ int read_tar(const char *file_path, entry_callbacks_t *callbacks, void *context_
             num_blocks = GET_NUM_BLOCKS(header_translated.filesize);
             while(i < num_blocks)
             {
-                if(read_block(fp, buffer) != 0)
+                if(read_block(callback, context_data, buffer) != 0)
                 {
                     log_error("Could not read block. File too short.");
                     return -6;
