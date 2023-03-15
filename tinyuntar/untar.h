@@ -96,7 +96,7 @@ typedef int (*entry_end_callback_t)(header_translated_t *header,
 									int entry_index, 
 									void *context_data);
 
-typedef int (*data_read_callback_t(void *context_data, unsigned char* block, int length);
+typedef int (*data_read_callback_t)(void *context_data, unsigned char* block, int length);
 
 struct entry_callbacks_s
 {
