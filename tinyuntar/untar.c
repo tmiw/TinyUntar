@@ -407,7 +407,7 @@ enum entry_type_e get_type_from_char(char raw_type)
     return T_OTHER;
 }
 
-int inline get_last_block_portion_size(int filesize)
+int get_last_block_portion_size(int filesize)
 {
 	const int partial = filesize % TAR_BLOCK_SIZE;
 	return (partial > 0 ? partial : TAR_BLOCK_SIZE);
