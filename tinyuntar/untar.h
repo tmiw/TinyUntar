@@ -1,6 +1,10 @@
 #ifndef __UNTAR_H
 #define __UNTAR_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -115,6 +119,10 @@ char *trim(char *raw, int length);
 int parse_header(unsigned const char buffer[512], header_t *header);
 int translate_header(header_t *raw_header, header_translated_t *parsed);
 enum entry_type_e get_type_from_char(char raw_type);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
